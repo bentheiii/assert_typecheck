@@ -5,7 +5,7 @@ from functools import partial
 from itertools import chain
 from os import remove
 from tempfile import NamedTemporaryFile
-from typing import Optional, Sequence, Mapping, Tuple
+from typing import Mapping, Optional, Sequence, Tuple
 
 from mypy.api import run, run_dmypy
 
@@ -85,30 +85,18 @@ assert_mypy_typechecks = _global_mypy_runner.assert_mypy_typechecks
 
 
 class DMyPyRunner(BaseMypyRunner):
-    def __init__(self, python_version: Optional[str] = ..., platform: Optional[str] = ...,
-                 other_options: Sequence[str] = ...):
-        if (python_version is not ...) or (platform is not ...) or (other_options is not ...):
-            if python_version is ...:
-                python_version = None
-            if platform is ...:
-                platform = None
-            if other_options is ...:
-                other_options = ()
-            self.python_version = python_version
-            self.platform = platform
-            self.other_options = other_options
+    def __init__(self, python_version: Optional[str] = None, platform: Optional[str] = None,
+                 other_options: Sequence[str] = ()):
+        self.python_version = python_version
+        self.platform = platform
+        self.other_options = other_options
 
     def _assert_mypy_typechecks(self, obj, *, python_version: Optional[str] = None, platform: Optional[str] = None,
                                 other_options: Sequence[str] = (), aliases: Optional[Mapping] = None, ):
         other_options = tuple(other_options)
-        if not hasattr(self, 'python_version'):
-            # we are unset, current configuration is what we will use for now on
-            self.python_version = python_version
-            self.platform = platform
-            self.other_options = other_options
-        elif (python_version != self.python_version
-              or platform != self.platform
-              or other_options != self.other_options):
+        if (python_version != self.python_version
+                or platform != self.platform
+                or other_options != self.other_options):
             return assert_mypy_typechecks(obj, python_version=python_version, platform=platform,
                                           other_options=other_options, aliases=aliases)
         return super()._assert_mypy_typechecks(obj, python_version=python_version, platform=platform,

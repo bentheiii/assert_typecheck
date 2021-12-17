@@ -1,9 +1,9 @@
 import re
-from typing import TypeVar, overload, Iterator, Union, Tuple, Literal, Generic
+from typing import Generic, Iterator, Tuple, TypeVar, overload
 
-from pytest import mark, raises, fixture
+from pytest import fixture, mark, raises
 
-from assert_typecheck.assert_mypy import assert_mypy_typechecks, DMyPyRunner
+from assert_typecheck.assert_mypy import DMyPyRunner, assert_mypy_typechecks
 from tests.util import REF
 
 
@@ -100,8 +100,10 @@ def test_good_code(code, dmypy):
 def bc0() -> int:
     return 'a'
 
+
 def bc1(a: A[int], b: int) -> str:
     return comb(a.foo(), b)
+
 
 bad_code = [bc0, bc1]
 
